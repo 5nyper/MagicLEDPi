@@ -1,0 +1,2 @@
+# MagiclLEDPi
+PoC of this
