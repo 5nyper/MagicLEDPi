@@ -9,5 +9,9 @@ get '/app' do
 	response["Connection"] = "Close"
 	`sudo pkill blink` 
 	`gpio write 0 0` 
-	`sudo ./blink #{params["func"]}`
+	pid = fork do
+		`sudo ./blink #{params["func"]}`
+	end
+	Process.detach(pid)
+	"Done"
 end
