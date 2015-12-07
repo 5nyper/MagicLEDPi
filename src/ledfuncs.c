@@ -1,4 +1,6 @@
 #include "ledfuncs.h"
+#include <wiringPi.h>
+#include <softPwm.h>
 
 void two(int value) {
 	while(1) {
