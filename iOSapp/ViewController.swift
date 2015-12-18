@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var pink: UIButton!
     @IBOutlet weak var yellow: UIButton!
     @IBOutlet weak var white: UIButton!
+    @IBOutlet weak var patt: UISegmentedControl!
     override func viewDidLoad() {
         super.viewDidLoad()
         red.backgroundColor = UIColor.redColor()
@@ -29,7 +30,6 @@ class ViewController: UIViewController {
         pink.backgroundColor = UIColor.magentaColor()
         yellow.backgroundColor = UIColor.yellowColor()
         white.backgroundColor = UIColor.whiteColor()
-        
         let buttons: [UIButton] = [red,green,blue,purple,pink, yellow,white]
         for x in buttons {
             x.layer.cornerRadius = 50;
@@ -55,52 +55,52 @@ class ViewController: UIViewController {
     @IBAction func onTouch(sender: UIButton!) {
         if sender.backgroundColor!.isEqual(UIColor.redColor()) {
             COLOR = "RED"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=1&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
                 .responseString { response in
                 print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.magentaColor()) {
             COLOR = "PINK"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=1&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
                 .responseString { response in
-                    print(response.result.value)
+                    print(response.result)
             }
         }
 
         else if sender.backgroundColor!.isEqual(UIColor.greenColor()) {
             COLOR = "GREEN"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=1&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
                 .responseString { response in
-                    print(response.result.value)
+                    print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.blueColor()) {
             COLOR = "BLUE"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=1&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
                 .responseString { response in
-                    print(response.result.value)
+                    print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.purpleColor()) {
             COLOR = "PURPLE"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=1&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
                 .responseString { response in
-                    print(response.result.value)
+                    print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.whiteColor()) {
             COLOR = "WHITE"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=1&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
                 .responseString { response in
-                    print(response.result.value)
+                    print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.yellowColor()) {
             COLOR = "YELLOW"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=1&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
                 .responseString { response in
-                    print(response.result.value)
+                    print(response.result)
             }
         }
 
