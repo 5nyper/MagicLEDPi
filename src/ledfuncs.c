@@ -3,70 +3,77 @@
 #include <softPwm.h>
 #include <stdlib.h>
 
-void two(int value) {
+void two(int r, int g, int b) {
 	while(1) {
-		softPwmWrite(0, value);
+		softPwmWrite(REDl, r);
+		softPwmWrite(GREENl, g);
+		softPwmWrite(BLUEl, b);
 		delay(100);
-		softPwmWrite(0, 0);
+		softPwmWrite(REDl, 0);
+		softPwmWrite(GREENl, 0);
+		softPwmWrite(BLUEl, 0);
 		delay(100);
-		softPwmWrite(0, value);
+		softPwmWrite(REDl, r);
+		softPwmWrite(GREENl, g);
+		softPwmWrite(BLUEl, b);
 		delay(100);
-		softPwmWrite(0, 0);
+		softPwmWrite(REDl, 0);
+		softPwmWrite(GREENl, 0);
+		softPwmWrite(BLUEl, 0);
 		delay(100);
 		delay(200);
 	}
 }
-void fade(int value) {
-	int x;
-	while(1) {
-		for (x = LOW_FADE; x<value; x++) {
-			softPwmWrite(RED, x);
-			softPwmWrite(GREEN, x);
-			softPwmWrite(BLUE, x);
+void fade(int a, int c, int d) {             //TODO: fix some rgb values that chnage color from this
+	int r,g,b;
+	while(1) { //for (r = a, g = c, b = d; r>((int)a/2)-1 && g>((int)c/2)-1 && b>((int)d/2)-1; r--,g--,b--)
+		for (r = a, g = c, b = d; r>10 || g>10 || b>10; r--,g--,b--) {  //WHITE, RED, GREEN, BLUE
+			softPwmWrite(REDl, r);
+			softPwmWrite(GREENl, g);
+			softPwmWrite(BLUEl, b);
 			delay(10);
 		}
-		for (x = value; x>LOW_FADE; x--) {
-			softPwmWrite(RED, x);
-			softPwmWrite(GREEN, x);
-			softPwmWrite(BLUE, x);
+		for (; r<a || g<c || b<d; r++,g++,b++) {
+			softPwmWrite(REDl, r);
+			softPwmWrite(GREENl, g);
+			softPwmWrite(BLUEl, b);
 			delay(10);
 		}
 	}
 }
-void steady(char* index) {
+void steady(int r, int g, int b) {
 	while(1) {
-//atoi(&index[2])
-		softPwmWrite(RED, 100);
-		softPwmWrite(GREEN, 20);
-		softPwmWrite(BLUE, 0);
+		softPwmWrite(REDl, r);
+		softPwmWrite(GREENl, g);
+		softPwmWrite(BLUEl, b);
 	}
 }
 void showcase(int value) {
-	softPwmWrite(RED, value);
+	softPwmWrite(REDl, value);
 	delay(1000);
-	softPwmWrite(RED, 0);
-	softPwmWrite(GREEN, value);
+	softPwmWrite(REDl, 0);
+	softPwmWrite(GREENl, value);
 	delay(1000);
-	softPwmWrite(GREEN, 0);
-	softPwmWrite(BLUE, value);
+	softPwmWrite(GREENl, 0);
+	softPwmWrite(BLUEl, value);
 	delay(1000);
-	softPwmWrite(BLUE, 0);
+	softPwmWrite(BLUEl, 0);
 	while (1) {
-		softPwmWrite(RED, 50);
-		softPwmWrite(GREEN, 1);   // PURPLE
-		softPwmWrite(BLUE, 70);
+		softPwmWrite(REDl, 50);
+		softPwmWrite(GREENl, 1);   // PURPLE
+		softPwmWrite(BLUEl, 70);
 		delay(200);
-		softPwmWrite(RED, 100);
-		softPwmWrite(GREEN, 5);   // ORANGE
-		softPwmWrite(BLUE, 0);
+		softPwmWrite(REDl, 100);
+		softPwmWrite(GREENl, 5);   // ORANGE
+		softPwmWrite(BLUEl, 0);
 		delay(200);
-		softPwmWrite(RED, 100);
-		softPwmWrite(GREEN, 100);   // WHITE
-		softPwmWrite(BLUE, 90);
+		softPwmWrite(REDl, 100);
+		softPwmWrite(GREENl, 100);   // WHITE
+		softPwmWrite(BLUEl, 90);
 		delay(200);
-		softPwmWrite(RED, 15);
-		softPwmWrite(GREEN, 0);   // PINK
-		softPwmWrite(BLUE, 70);
+		softPwmWrite(REDl, 15);
+		softPwmWrite(GREENl, 0);   // PINK
+		softPwmWrite(BLUEl, 70);
 		delay(200);
 	}
 }
