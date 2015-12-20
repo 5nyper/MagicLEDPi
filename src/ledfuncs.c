@@ -24,19 +24,19 @@ void two(int r, int g, int b) {
 		delay(200);
 	}
 }
-void fade(int a, int c, int d) {
-	int r,g,b;
-	while(1) {
-		for (r = a, g = c, b = d; r>((int)a*0.2) || g>((int)c*0.2) || b>((int)d*0.2); r--,g--,b--) {
-			softPwmWrite(REDl, r);
-			softPwmWrite(GREENl, g);
-			softPwmWrite(BLUEl, b);
+void fade(int r, int g, int b) {
+	int i;
+	while(1) { 
+		for (i = 100; i>10; i--){
+			softPwmWrite(REDl, r*i/100);
+			softPwmWrite(GREENl, g*i/100);
+			softPwmWrite(BLUEl, b*i/100);
 			delay(10);
 		}
-		for (; r<a || g<c || b<d; r++,g++,b++) {
-			softPwmWrite(REDl, r);
-			softPwmWrite(GREENl, g);
-			softPwmWrite(BLUEl, b);
+		for (i = 10; i<100; i++){
+			softPwmWrite(REDl, r*i/100);
+			softPwmWrite(GREENl, g*i/100);
+			softPwmWrite(BLUEl, b*i/100);
 			delay(10);
 		}
 	}
