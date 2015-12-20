@@ -24,10 +24,10 @@ void two(int r, int g, int b) {
 		delay(200);
 	}
 }
-void fade(int a, int c, int d) {             //TODO: fix some rgb values that change color from this
+void fade(int a, int c, int d) {
 	int r,g,b;
-	while(1) { //for (r = a, g = c, b = d; r>((int)a/2)-1 && g>((int)c/2)-1 && b>((int)d/2)-1; r--,g--,b--)
-		for (r = a, g = c, b = d; r>10 || g>10 || b>10; r--,g--,b--) {  //WHITE, RED, GREEN, BLUE
+	while(1) {
+		for (r = a, g = c, b = d; r>((int)a*0.2) || g>((int)c*0.2) || b>((int)d*0.2); r--,g--,b--) {
 			softPwmWrite(REDl, r);
 			softPwmWrite(GREENl, g);
 			softPwmWrite(BLUEl, b);
