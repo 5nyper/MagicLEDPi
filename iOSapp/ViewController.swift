@@ -9,10 +9,17 @@
 import UIKit
 import Alamofire
 
-var COLOR = ""
+enum Color: Int {
+    case Red =    0
+    case Green =  1
+    case Blue =   2
+    case Purple = 3
+    case Pink =   4
+    case Orange = 5
+    case White =  6
+}
 
 class ViewController: UIViewController {
-
     @IBOutlet weak var red: UIButton!
     @IBOutlet weak var green: UIButton!
     @IBOutlet weak var blue: UIButton!
@@ -28,9 +35,9 @@ class ViewController: UIViewController {
         blue.backgroundColor = UIColor.blueColor()
         purple.backgroundColor = UIColor.purpleColor()
         pink.backgroundColor = UIColor.magentaColor()
-        yellow.backgroundColor = UIColor.yellowColor()
+        yellow.backgroundColor = UIColor.orangeColor()
         white.backgroundColor = UIColor.whiteColor()
-        let buttons: [UIButton] = [red,green,blue,purple,pink, yellow,white]
+        let buttons: [UIButton] = [red,green,blue,purple,pink,yellow,white]
         for x in buttons {
             x.layer.cornerRadius = 50;
         }
@@ -54,51 +61,45 @@ class ViewController: UIViewController {
 
     @IBAction func onTouch(sender: UIButton!) {
         if sender.backgroundColor!.isEqual(UIColor.redColor()) {
-            COLOR = "RED"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
+            print("https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Red.rawValue)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Red.rawValue)")
                 .responseString { response in
                 print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.magentaColor()) {
-            COLOR = "PINK"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Pink.rawValue)")
                 .responseString { response in
                     print(response.result)
             }
         }
 
         else if sender.backgroundColor!.isEqual(UIColor.greenColor()) {
-            COLOR = "GREEN"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Green.rawValue)")
                 .responseString { response in
                     print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.blueColor()) {
-            COLOR = "BLUE"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Blue.rawValue)")
                 .responseString { response in
                     print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.purpleColor()) {
-            COLOR = "PURPLE"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Purple)")
                 .responseString { response in
                     print(response.result)
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.whiteColor()) {
-            COLOR = "WHITE"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.White.rawValue)")
                 .responseString { response in
                     print(response.result)
             }
         }
-        else if sender.backgroundColor!.isEqual(UIColor.yellowColor()) {
-            COLOR = "YELLOW"
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(COLOR)")
+        else if sender.backgroundColor!.isEqual(UIColor.orangeColor()) {
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Orange.rawValue)")
                 .responseString { response in
                     print(response.result)
             }
