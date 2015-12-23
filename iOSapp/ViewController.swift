@@ -87,7 +87,7 @@ class ViewController: UIViewController {
             }
         }
         else if sender.backgroundColor!.isEqual(UIColor.purpleColor()) {
-            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Purple)")
+            Alamofire.request(.GET, "https://0.0.0.0/app?func=\(patt.selectedSegmentIndex)&color=\(Color.Purple.rawValue)")
                 .responseString { response in
                     print(response.result)
             }
