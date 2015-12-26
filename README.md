@@ -2,7 +2,7 @@
 ##PoC of this
 
 
-[![Demo CountPages alpha](https://j.gifs.com/jQgJRg.gif)](https://www.youtube.com/watch?v=bDATHtunbgw)
+[![End Goal](https://j.gifs.com/jQgJRg.gif)](https://www.youtube.com/watch?v=bDATHtunbgw)
 
 #TODO
 
