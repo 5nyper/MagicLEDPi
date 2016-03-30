@@ -1,9 +1,5 @@
 #include <Adafruit_NeoPixel.h>
 
-#define PIN 7
-
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(24, PIN, NEO_GRB + NEO_KHZ800);
-
 enum Color {
   red,
   green,
@@ -14,23 +10,45 @@ enum Color {
   white
 };
 
-uint32_t colors[] = {strip.Color(255,0,0), strip.Color(0,255,0), strip.Color(0,0,255), strip.Color(160,32,240), strip.Color(255,192,203), strip.Color(255,165,0), strip.Color(255,255,255)};
+class Headlight {
+  public:
+    Adafruit_NeoPixel ring;
+    Headlight(int pin);
+    void showcase(); 
+  private:
+    uint32_t colors[7] = {ring.Color(255,0,0), 
+                     ring.Color(0,255,0), 
+                     ring.Color(0,0,255), 
+                     ring.Color(160,32,240), 
+                     ring.Color(255,192,203), 
+                     ring.Color(255,165,0), 
+                     ring.Color(255,255,255)};
+};
 
-int g = 0;
+Headlight::Headlight(int pin) {
+  ring = Adafruit_NeoPixel(24, pin, NEO_GRB + NEO_KHZ800);
+}
+
+void Headlight::showcase() {
+  for (int k = 0; k < 7; k++) {
+    for (int i = 0; i<=24; i++) {
+      ring.setPixelColor(i, colors[k]);
+      ring.show();
+      delay(10);
+    }
+  }
+}
+
+Headlight left(7);
 
 void setup() {
-  strip.begin();
-  strip.show();
-  strip.setBrightness(25);
+  left.ring.begin();
+  left.ring.show();
+  left.ring.setBrightness(0);
+  delay(5000);
+  left.ring.setBrightness(200);
 }
 
 void loop() {
-  
-}
-
-void carStart() {
-  for (int i = 0; i<=24; i++) {
-    strip.setPixelColor(i, colors[white]);
-    strip.show();
-  }
+  left.showcase();
 }
