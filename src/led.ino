@@ -1,40 +1,52 @@
 #include "FastLED.h"
-#include "Adafruit_NeoPixel.h"
 
 #define BRIGHTNESS 75
 
-enum Color {
-  red,
-  green,
-  blue,
-  purple,
-  pink,
-  orange,
-  white
-};
+#define LEFT_LEDS 24
+#define RIGHT_LEDS 24
 
-class Both {
+#define LEFT 0
+#define RIGHT 1
+
+#define PINR 7
+#define PINL 6
+
+class Headlights {
   public:
-    Both(int lef, int righ);
-    void setColor(int lef, int righ);
+    Headlights(int lef, int righ);
+    void setColor(CRGB lef, CRGB righ);
+    void setColor(CRGB col);
     void fade();
-    CRGB headL[24];
-    CRGB headR[24];
+    void heartbeat();
+    CRGB all[RIGHT_LEDS + LEFT_LEDS];
+    CRGB *headL, *headR;
+    CRGB leftC = CRGB::White, rightC = CRGB::White, allC = CRGB::White;
 };
 
-Both::Both(int lef, int righ) {
-  FastLED.addLeds<NEOPIXEL, 6>(headL, 24);
-  FastLED.addLeds<NEOPIXEL, 7>(headR, 24);
+Headlights::Headlights(int lef, int righ) {
+  headL = all;
+  headR = all + RIGHT_LEDS;
+  FastLED.addLeds<NEOPIXEL, PINL>(headL, LEFT_LEDS);
+  FastLED.addLeds<NEOPIXEL, PINR>(headR, RIGHT_LEDS);
 }
-void Both::setColor(int lef, int righ) {
+void Headlights::setColor(CRGB lef, CRGB righ) {
+  leftC = lef;
+  rightC = righ;
   for (int i = 0; i<24; i++) {
     headL[i] = lef;
     headR[i] = righ;
   }
-  FastLED.show();   // RIGHT RING IS NOW GREEN
+  FastLED.show();
+}
+void Headlights::setColor(CRGB col) {
+  allC = col;
+  for (int i = 0; i<48; i++) {
+    all[i] = col;
+  }
+  FastLED.show();
 }
 
-void Both::fade() {
+void Headlights::fade() {
   for (int i = BRIGHTNESS; i<=250; i++) {
     FastLED.setBrightness(i);
     FastLED.show();
@@ -47,91 +59,100 @@ void Both::fade() {
   }
 }
 
-class Headlight {
-  protected:
-    uint32_t colors[7] = {ring.Color(255,0,0),
-                    ring.Color(0,255,0),
-                    ring.Color(0,0,255),
-                    ring.Color(160,32,240),
-                    ring.Color(255,192,203),
-                    ring.Color(255,165,0),
-                    ring.Color(255,255,255)};
-    int color;
-  public:
-  Adafruit_NeoPixel ring;
-  Headlight(int pin);
-  void showcase();
-  void setColor(int col);
-  void fade();
-  void heartbeat();
-};
-
-Headlight::Headlight(int pin) {
-  ring = Adafruit_NeoPixel(24, pin, NEO_GRB + NEO_KHZ800);
-}
-
-void Headlight::showcase() {
-  for (int k = 0; k < 7; k++) {
-    for (int i = 0; i<=24; i++) {
-      ring.setPixelColor(i, colors[k]);
-      ring.show();
-      delay(10);
-    }
-  }
-}
-
-void Headlight::setColor(int col) {
-  color = col;
-  for (int i = 0; i<=24; i++) {
-    ring.setPixelColor(i, colors[color]);
-    ring.show();
-  }
-}
-
-void Headlight::fade() {
-  for (int i = BRIGHTNESS; i<=250; i++) {
-    ring.setBrightness(i);
-    ring.show();
-    delay(1);
-  }
-  for (int i = 250; i>=BRIGHTNESS; i--) {
-    ring.setBrightness(i);
-    ring.show();
-    delay(1);
-  }
-}
-
-void Headlight::heartbeat() {
-  ring.clear(); ring.show();
-  this->setColor(color);
+void Headlights::heartbeat() {
+  FastLED.clear(); FastLED.show();
+  this->setColor(allC);
   delay(100);
-  ring.clear(); ring.show();
+  FastLED.clear(); FastLED.show();
   delay(100);
-  this->setColor(color);
+  this->setColor(allC);
   delay(100);
-  ring.clear(); ring.show();
+  FastLED.clear(); FastLED.show();
   delay(500);
 }
 
-Both ledring(6,7);  // 6: left, 7: right
-Headlight left(6);
-Headlight right(7);
+Headlights ledring(6,7);
+
+class Singlelight {
+  public:
+    Singlelight(int sid);
+    void setColor(CRGB col);
+    void fade();
+    void heartbeat();
+  private:
+    int side;
+    CRGB leftC = ledring.leftC, rightC = ledring.rightC;
+};
+
+Singlelight::Singlelight(int sid) {
+  side = sid;
+}
+
+void Singlelight::setColor(CRGB col) {
+  if (side == LEFT) {
+      leftC = col;
+      for (int i = 0; i<24; i++) {
+        ledring.headL[i] = col;
+    }
+  }
+    else {
+      rightC = col;
+      for (int i = 0; i<24; i++) {
+        ledring.headR[i] = col;
+    }
+  }
+  FastLED.show();
+}
+
+void Singlelight::fade() {
+  for (int i = BRIGHTNESS; i<=250; i++) {
+    FastLED[side].showLeds(i);
+    delay(1);
+  }
+  for (int i = 250; i>=BRIGHTNESS; i--) {
+    FastLED[side].showLeds(i);
+    delay(1);
+  }
+}
+
+void Singlelight::heartbeat() {
+  if (side == LEFT) {
+    FastLED[LEFT].clearLedData(); FastLED.show();
+    this->setColor(leftC);
+    delay(100);
+    FastLED[LEFT].clearLedData(); FastLED.show();
+    delay(100);
+    this->setColor(leftC);
+    delay(100);
+    FastLED[LEFT].clearLedData(); FastLED.show();
+    delay(100);
+    this->setColor(leftC);
+  }
+  else {
+    FastLED[RIGHT].clearLedData(); FastLED.show();
+    this->setColor(rightC);
+    delay(100);
+    FastLED[RIGHT].clearLedData(); FastLED.show();
+    delay(100);
+    this->setColor(rightC);
+    delay(100);
+    FastLED[RIGHT].clearLedData(); FastLED.show();
+    delay(100);
+    this->setColor(rightC);
+  }
+}
+
+Singlelight right(RIGHT);
+Singlelight left(LEFT);  // 6: left, 7: right
 
 void setup() {
-  left.ring.begin();
-  left.ring.show();
-  left.ring.setBrightness(BRIGHTNESS);
-  right.ring.begin();
-  right.ring.show();
-  right.ring.setBrightness(BRIGHTNESS);
   FastLED.setBrightness(BRIGHTNESS);
+  right.setColor(CRGB::Red);
+  left.setColor(CRGB::Blue);
+  FastLED.show();
 }
 
 void loop() {
-  ledring.setColor(CRGB::White, CRGB::Pink);
-  delay(2000);
-  left.setColor(red);
-  delay(2000);
-  right.setColor(green);
-  delay(2000);
+  right.heartbeat();
+  left.heartbeat();
 }
