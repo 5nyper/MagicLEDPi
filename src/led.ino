@@ -1,4 +1,5 @@
-#include <Adafruit_NeoPixel.h>
+#include "FastLED.h"
+#include "Adafruit_NeoPixel.h"
 
 #define BRIGHTNESS 75
 
@@ -12,60 +13,60 @@ enum Color {
   white
 };
 
-class Both { // this is for using them both at the same time.
+class Both {
   public:
     Both(int lef, int righ);
-    virtual void setColor(int col);
-    void init();
-    void setBright(int x);
-    Adafruit_NeoPixel headL;
-    Adafruit_NeoPixel headR;
-  protected:
-    uint32_t colors[7] = {headL.Color(255,0,0),
-                    headL.Color(0,255,0),
-                    headL.Color(0,0,255),
-                    headL.Color(160,32,240),
-                    headL.Color(255,192,203),
-                    headL.Color(255,165,0),
-                    headL.Color(255,255,255)};
-    int color = red;
+    void setColor(int lef, int righ);
+    void fade();
+    CRGB headL[24];
+    CRGB headR[24];
 };
 
 Both::Both(int lef, int righ) {
-  headL = Adafruit_NeoPixel(24, lef, NEO_GRB + NEO_KHZ800);
-  headR = Adafruit_NeoPixel(24, righ, NEO_GRB + NEO_KHZ800);
+  FastLED.addLeds<NEOPIXEL, 6>(headL, 24);
+  FastLED.addLeds<NEOPIXEL, 7>(headR, 24);
 }
-void Both::setColor(int col) {
-  color = col;
-  for (int i = 0; i<=24; i++) {
-    headL.setPixelColor(i, colors[color]);
-    headR.setPixelColor(i, colors[color]);
-    headL.show();
-    headR.show();
+void Both::setColor(int lef, int righ) {
+  for (int i = 0; i<24; i++) {
+    headL[i] = lef;
+    headR[i] = righ;
+  }
+  FastLED.show();   // RIGHT RING IS NOW GREEN
+}
+
+void Both::fade() {
+  for (int i = BRIGHTNESS; i<=250; i++) {
+    FastLED.setBrightness(i);
+    FastLED.show();
+    delay(1);
+  }
+  for (int i = 250; i>=BRIGHTNESS; i--) {
+    FastLED.setBrightness(i);
+    FastLED.show();
+    delay(1);
   }
 }
-void Both::init() {
-  headL.begin();
-  headL.show();
-  headR.begin();
-  headR.show();
-}
-void Both::setBright(int x) {
-  headL.setBrightness(x);
-  headR.setBrightness(x);
-}
 
-class Headlight : public Both {
+class Headlight {
+  protected:
+    uint32_t colors[7] = {ring.Color(255,0,0),
+                    ring.Color(0,255,0),
+                    ring.Color(0,0,255),
+                    ring.Color(160,32,240),
+                    ring.Color(255,192,203),
+                    ring.Color(255,165,0),
+                    ring.Color(255,255,255)};
+    int color;
   public:
-    Adafruit_NeoPixel ring;
-    Headlight(int pin);
-    void showcase();
-    virtual void setColor(int col);
-    void fade();
-    void heartbeat();
+  Adafruit_NeoPixel ring;
+  Headlight(int pin);
+  void showcase();
+  void setColor(int col);
+  void fade();
+  void heartbeat();
 };
 
-Headlight::Headlight(int pin) : Both(pin, 0) {
+Headlight::Headlight(int pin) {
   ring = Adafruit_NeoPixel(24, pin, NEO_GRB + NEO_KHZ800);
 }
 
@@ -112,21 +113,25 @@ void Headlight::heartbeat() {
   delay(500);
 }
 
-Both ledring(6,7);
-Headlight left(7);
+Both ledring(6,7);  // 6: left, 7: right
+Headlight left(6);
+Headlight right(7);
 
 void setup() {
   left.ring.begin();
   left.ring.show();
   left.ring.setBrightness(BRIGHTNESS);
-  ledring.init();
-  ledring.setBright(BRIGHTNESS);
+  right.ring.begin();
+  right.ring.show();
+  right.ring.setBrightness(BRIGHTNESS);
+  FastLED.setBrightness(BRIGHTNESS);
 }
 
 void loop() {
-  //ledring.setColor(green);
+  ledring.setColor(CRGB::White, CRGB::Pink);
+  delay(2000);
   left.setColor(red);
-  delay(5000);
-  ledring.setColor(blue);
-  delay(5000);
+  delay(2000);
+  right.setColor(green);
+  delay(2000);
 }
