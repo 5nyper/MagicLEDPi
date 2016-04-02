@@ -61,14 +61,15 @@ void Headlights::fade() {
 
 void Headlights::heartbeat() {
   FastLED.clear(); FastLED.show();
-  this->setColor(allC);
   delay(100);
   FastLED.clear(); FastLED.show();
   delay(100);
   this->setColor(allC);
   delay(100);
   FastLED.clear(); FastLED.show();
-  delay(500);
+  delay(100);
+  this->setColor(allC);
+  delay(250);
 }
 
 Headlights ledring(6,7);
@@ -146,13 +147,52 @@ Singlelight right(RIGHT);
 Singlelight left(LEFT);  // 6: left, 7: right
 
 void setup() {
+  Serial.begin(9600);
   FastLED.setBrightness(BRIGHTNESS);
-  right.setColor(CRGB::Red);
-  left.setColor(CRGB::Blue);
+  ledring.setColor(CRGB::White, CRGB::White);
   FastLED.show();
 }
 
 void loop() {
-  right.heartbeat();
-  left.heartbeat();
+  if (Serial.available() > 0) {
+    char foo = Serial.read();
+    Serial.println(foo);
+    switch (foo) {
+      case '1':
+        ledring.setColor(CRGB::Red);
+        break;
+      case '2':
+        ledring.setColor(CRGB::Blue);
+        break;
+      case '3':
+        ledring.setColor(CRGB::Green);
+        break;
+      case '4':
+        ledring.setColor(CRGB::Yellow);
+        break;
+      case '5':
+        ledring.setColor(CRGB::Purple);
+        break;
+      case '6':
+        ledring.setColor(CRGB::Orange);
+        break;
+      case '7':
+        ledring.setColor(CRGB::Pink);
+        break;
+      case '8':
+        while(Serial.available() == 0)
+          ledring.fade();
+        break;
+      case '9':
+        while(Serial.available() == 0)
+          ledring.heartbeat();
+        break;
+      default:
+        ledring.setColor(CRGB::White);
+        break;
+    }
+  }
+  else {
+    ;
+  }
 }
