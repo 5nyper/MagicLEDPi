@@ -62,8 +62,6 @@ void Headlights::fade() {
 void Headlights::heartbeat() {
   FastLED.clear(); FastLED.show();
   delay(100);
-  FastLED.clear(); FastLED.show();
-  delay(100);
   this->setColor(allC);
   delay(100);
   FastLED.clear(); FastLED.show();
