@@ -40,7 +40,6 @@ void Headlights::setColor(CRGB lef, CRGB righ) {
   FastLED.show();
 }
 void Headlights::setColor(CRGB col) {
-  allC, leftC, rightC = col;
   for (int i = 0; i<48; i++) {
     all[i] = col;
   }
@@ -156,16 +155,35 @@ void setup() {
   FastLED.show();
 }
 
+String buff;
+bool inString = false;
+
 void loop() {
   if (Serial.available() > 0) {
-    char arg1 = Serial.read();
-    delay(10);
-    char arg2 = Serial.read();
-    Serial.println(arg1);
-    Serial.println(arg2);
-    switch (arg1) {
+    while (1) {
+      if (Serial.available() > 0) {
+        char incom = (char) Serial.read();
+        if (incom  == '!') {
+          Serial.println("Getting command!");
+          inString = true;
+          continue;
+        }
+        else if (incom == ';') {
+          Serial.println("End of Command!");
+          inString = false;
+          break;
+        }
+        else if (inString) {
+          Serial.print("Adding :");
+          Serial.println(incom);
+          buff += incom;
+        }
+      }
+    }
+    Serial.println(buff);
+    switch (buff[0]) {
       case 'c':
-        switch(arg2) {
+        switch(buff[1]) {
           case '1':
             ledring.setColor(CRGB::Red);
             break;
@@ -207,7 +225,7 @@ void loop() {
         }
         break;
       case 'b':
-        switch(arg2) {
+        switch(buff[1]) {
           case '1':
             right.setColor(CRGB::Red);
             break;
@@ -247,7 +265,7 @@ void loop() {
         }
         break;
       case 'a':
-        switch(arg2) {
+        switch(buff[1]) {
           case '1':
             left.setColor(CRGB::Red);
             break;
@@ -289,6 +307,7 @@ void loop() {
       default:
         ledring.setColor(CRGB::SkyBlue);
       }
+      buff = "";
   }
   else {
     ;
