@@ -20,7 +20,8 @@ class Headlights {
     void heartbeat();
     CRGB all[RIGHT_LEDS + LEFT_LEDS];
     CRGB *headL, *headR;
-    CRGB leftC = CRGB::White, rightC = CRGB::White, allC = CRGB::White;
+    CRGB leftC = CRGB::SkyBlue, rightC = CRGB::SkyBlue, allC = CRGB::SkyBlue;
+
 };
 
 Headlights::Headlights(int lef, int righ) {
@@ -90,12 +91,14 @@ Singlelight::Singlelight(int sid) {
 void Singlelight::setColor(CRGB col) {
   if (side == LEFT) {
       leftC = col;
+      ledring.leftC = leftC;
       for (int i = 0; i<24; i++) {
         ledring.headL[i] = col;
     }
   }
     else {
       rightC = col;
+      ledring.rightC = rightC;
       for (int i = 0; i<24; i++) {
         ledring.headR[i] = col;
     }
@@ -147,48 +150,130 @@ Singlelight left(LEFT);  // 6: left, 7: right
 void setup() {
   Serial.begin(9600);
   FastLED.setBrightness(BRIGHTNESS);
-  ledring.setColor(CRGB::White, CRGB::White);
+  ledring.setColor(CRGB::SkyBlue, CRGB::SkyBlue);
   FastLED.show();
 }
 
 void loop() {
   if (Serial.available() > 0) {
-    char foo = Serial.read();
-    Serial.println(foo);
-    switch (foo) {
-      case '1':
-        ledring.setColor(CRGB::Red);
+    char arg1 = Serial.read();
+    delay(10);
+    char arg2 = Serial.read();
+    Serial.println(arg1);
+    Serial.println(arg2);
+    switch (arg1) {
+      case 'c':
+        switch(arg2) {
+          case '1':
+            ledring.setColor(CRGB::Red);
+            break;
+          case '2':
+            ledring.setColor(CRGB::Blue);
+            break;
+          case '3':
+            ledring.setColor(CRGB::Green);
+            break;
+          case '4':
+            ledring.setColor(CRGB::Yellow);
+            break;
+          case '5':
+            ledring.setColor(CRGB::Purple);
+            break;
+          case '6':
+            ledring.setColor(CRGB::Orange);
+            break;
+          case '7':
+            ledring.setColor(CRGB::Pink);
+            break;
+          case '8':
+            while(Serial.available() == 0)
+              ledring.fade();
+            break;
+          case '9':
+            while(Serial.available() == 0)
+              right.heartbeat();
+              left.heartbeat();
+            break;
+          default:
+            ledring.setColor(CRGB::SkyBlue);
+            break;
+        }
         break;
-      case '2':
-        ledring.setColor(CRGB::Blue);
+      case 'b':
+        switch(arg2) {
+          case '1':
+            right.setColor(CRGB::Red);
+            break;
+          case '2':
+            right.setColor(CRGB::Blue);
+            break;
+          case '3':
+            right.setColor(CRGB::Green);
+            break;
+          case '4':
+            right.setColor(CRGB::Yellow);
+            break;
+          case '5':
+            right.setColor(CRGB::Purple);
+            break;
+          case '6':
+            right.setColor(CRGB::Orange);
+            break;
+          case '7':
+            right.setColor(CRGB::Pink);
+            break;
+          case '8':
+            while(Serial.available() == 0)
+              right.fade();
+            break;
+          case '9':
+            while(Serial.available() == 0)
+              right.heartbeat();
+            break;
+          default:
+            right.setColor(CRGB::SkyBlue);
+            break;
+        }
         break;
-      case '3':
-        ledring.setColor(CRGB::Green);
-        break;
-      case '4':
-        ledring.setColor(CRGB::Yellow);
-        break;
-      case '5':
-        ledring.setColor(CRGB::Purple);
-        break;
-      case '6':
-        ledring.setColor(CRGB::Orange);
-        break;
-      case '7':
-        ledring.setColor(CRGB::Pink);
-        break;
-      case '8':
-        while(Serial.available() == 0)
-          ledring.fade();
-        break;
-      case '9':
-        while(Serial.available() == 0)
-          ledring.heartbeat();
+      case 'a':
+        switch(arg2) {
+          case '1':
+            left.setColor(CRGB::Red);
+            break;
+          case '2':
+            left.setColor(CRGB::Blue);
+            break;
+          case '3':
+            left.setColor(CRGB::Green);
+            break;
+          case '4':
+            left.setColor(CRGB::Yellow);
+            break;
+          case '5':
+            left.setColor(CRGB::Purple);
+            break;
+          case '6':
+            left.setColor(CRGB::Orange);
+            break;
+          case '7':
+            left.setColor(CRGB::Pink);
+            break;
+          case '8':
+            while(Serial.available() == 0)
+              left.fade();
+            break;
+          case '9':
+            while(Serial.available() == 0)
+              left.heartbeat();
+            break;
+          default:
+            left.setColor(CRGB::White);
+            break;
+        }
         break;
       default:
-        ledring.setColor(CRGB::White);
-        break;
-    }
+        ledring.setColor(CRGB::SkyBlue);
+      }
   }
   else {
     ;
