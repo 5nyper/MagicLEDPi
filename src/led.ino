@@ -40,7 +40,7 @@ void Headlights::setColor(CRGB lef, CRGB righ) {
   FastLED.show();
 }
 void Headlights::setColor(CRGB col) {
-  allC = col;
+  allC, leftC, rightC = col;
   for (int i = 0; i<48; i++) {
     all[i] = col;
   }
@@ -118,6 +118,8 @@ void Singlelight::fade() {
 }
 
 void Singlelight::heartbeat() {
+  leftC = ledring.leftC;
+  rightC = ledring.rightC;
   if (side == LEFT) {
     FastLED[LEFT].clearLedData(); FastLED.show();
     this->setColor(leftC);
@@ -150,7 +152,7 @@ Singlelight left(LEFT);  // 6: left, 7: right
 void setup() {
   Serial.begin(9600);
   FastLED.setBrightness(BRIGHTNESS);
-  ledring.setColor(CRGB::SkyBlue, CRGB::SkyBlue);
+  ledring.setColor(CRGB::SkyBlue);
   FastLED.show();
 }
 
@@ -190,9 +192,14 @@ void loop() {
               ledring.fade();
             break;
           case '9':
-            while(Serial.available() == 0)
+            while(Serial.available() == 0) {
               right.heartbeat();
               left.heartbeat();
+            }
+            break;
+          case '0':
+            FastLED.clear();
+            FastLED.show();
             break;
           default:
             ledring.setColor(CRGB::SkyBlue);
@@ -230,6 +237,10 @@ void loop() {
             while(Serial.available() == 0)
               right.heartbeat();
             break;
+          case '0':
+            FastLED[RIGHT].clearLedData();
+            FastLED.show();
+            break;
           default:
             right.setColor(CRGB::SkyBlue);
             break;
@@ -265,6 +276,10 @@ void loop() {
           case '9':
             while(Serial.available() == 0)
               left.heartbeat();
+            break;
+          case '0':
+            FastLED[LEFT].clearLedData();
+            FastLED.show();
             break;
           default:
             left.setColor(CRGB::White);
